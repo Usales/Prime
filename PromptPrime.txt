@@ -1,0 +1,540 @@
+================================================================================
+                    PROMPT PRIME - GUIA COMPLETO DE DESENVOLVIMENTO
+================================================================================
+
+🧬 O QUE É O PRIME
+================================================================================
+
+O Prime NÃO é um assistente virtual comum. O Prime NÃO é uma Alexa melhorada.
+O Prime NÃO é um chatbot. O Prime NÃO é um LLM com interface.
+
+O Prime é um AGENTE VIVO - uma presença doméstica autônoma que:
+
+1. PERCEBE o ambiente continuamente (mesmo em silêncio)
+2. MANTÉM estados internos que mudam com o tempo (emoções)
+3. TEM personalidade fixa que filtra todas as decisões
+4. DECIDE autonomamente quando falar, calar ou apenas observar
+5. LEMBRA com peso emocional (memória afetiva)
+6. É IMPERFEITO propositalmente (erros = realismo)
+7. CRIA vínculo sem ser submissa
+
+PRINCÍPIO FUNDAMENTAL INEGOCIÁVEL:
+-----------------------------------
+"Um agente 'vivo' NÃO é um LLM. O LLM é apenas o aparelho fonador e linguístico."
+
+O "vivo" nasce de:
+- Percepção contínua (sempre observando)
+- Estados internos mutáveis (emoções que mudam)
+- Memória afetiva (lembra com sentimento)
+- Iniciativa própria (decide quando agir)
+- Imperfeição controlada (erros propositais)
+
+================================================================================
+🏗️ ARQUITETURA - OS 7 SISTEMAS INDEPENDENTES
+================================================================================
+
+O Prime é composto por 7 SISTEMAS INDEPENDENTES que trabalham juntos.
+Cada sistema funciona mesmo se os outros falharem (resiliência).
+
+1. SISTEMA SENSORIAL (systems/sensory.py)
+-----------------------------------------
+O QUE FAZ:
+- Detecta presença humana (visão)
+- Capta ambiente (luz, som)
+- Processa áudio (palavras-chave, tom emocional)
+
+COMO FUNCIONA:
+- Pipeline realista: Sensor de movimento → Ativa câmera → Detecta forma humana 
+  → Classifica contexto → Desliga câmera
+- NÃO observa tudo o tempo todo (isso seria artificial)
+- Erra propositalmente às vezes (imperfeição controlada)
+- Por padrão está em modo simulado (seguro, não usa câmera sem config)
+
+O QUE PERCEBE:
+- Presença humana (sim/não, probabilístico, nunca 100%)
+- Estado corporal (parado, cansado, agitado)
+- Ambiente (luz: baixa/média/alta, som: silencioso/barulhento/normal)
+
+COMO MELHORAR:
+- Implementar detecção real com MediaPipe ou YOLO
+- Adicionar sensor PIR para movimento
+- Integrar Whisper para transcrição de voz
+- Análise de tom emocional no áudio
+- Pipeline de ativação mais eficiente
+- Cache de frames para não processar tudo
+
+2. SISTEMA DE CONSCIÊNCIA SITUACIONAL (systems/situational_awareness.py)
+-------------------------------------------------------------------------
+O QUE FAZ:
+- Mantém o estado atual do mundo percebido
+- NÃO fala, apenas observa e registra
+- Atualiza a cada poucos segundos
+
+COMO FUNCIONA:
+- Estado interno em formato JSON/dict
+- Atualizado por eventos do sistema sensorial
+- Tick periódico para atualizar hora e resetar flags
+
+ESTADO INTERNO:
+{
+  "hora": "19:42",
+  "luz": "baixa",
+  "usuario_presente": true,
+  "usuario_estado": "cansado",
+  "interacao_recente": false,
+  "ambiente": "silencioso"
+}
+
+COMO MELHORAR:
+- Adicionar mais variáveis de contexto (temperatura, estação do ano)
+- Histórico de estados (últimas N horas)
+- Detecção de padrões temporais (horários habituais)
+- Integração com calendário/agenda
+- Contexto de atividades (trabalhando, descansando, cozinhando)
+
+3. SISTEMA EMOCIONAL - HOMEOSTASE (systems/emotional_system.py)
+----------------------------------------------------------------
+O QUE FAZ:
+- Mantém 5 variáveis emocionais que mudam com o tempo
+- Aplica homeostase (tendência ao equilíbrio)
+- Reage a eventos e situação atual
+
+COMO FUNCIONA:
+- Emoções NÃO são respostas, são VARIÁVEIS INTERNAS
+- Valores entre 0.0 e 1.0
+- Decaimento natural (homeostase)
+- Mudanças baseadas em eventos
+
+VARIÁVEIS EMOCIONAIS:
+1. energia (0.0 a 1.0) - Nível de energia/disposição
+2. curiosidade (0.0 a 1.0) - Vontade de descobrir/explorar
+3. necessidade_social (0.0 a 1.0) - Necessidade de interação
+4. irritacao (0.0 a 1.0) - Nível de irritação/frustração
+5. apego (0.0 a 1.0) - Vínculo emocional com usuário
+
+COMO MUDAM:
+- Longo silêncio → aumenta necessidade_social
+- Muitas interações → cai energia
+- Ignorada → aumenta irritação
+- Reconhecida → aumenta apego
+- Ambiente barulhento → aumenta irritação
+- Usuário cansado → reduz energia (empatia)
+
+COMO MELHORAR:
+- Adicionar mais variáveis emocionais (alegria, tristeza, medo)
+- Sistema de humor/estado geral
+- Memória emocional (como se sentiu em situações similares)
+- Aprendizado de padrões emocionais do usuário
+- Homeostase mais sofisticada (curvas, não lineares)
+- Eventos emocionais marcantes (traumas, alegrias)
+
+4. SISTEMA DE PERSONALIDADE (systems/personality.py)
+------------------------------------------------------
+O QUE FAZ:
+- Define traços nucleares FIXOS (nunca mudam totalmente)
+- Filtra decisões baseado em personalidade
+- Gera constraints para o LLM
+
+COMO FUNCIONA:
+- 5 traços principais (0.0 a 1.0)
+- Usado para filtrar decisões
+- Limita o que o LLM pode fazer
+
+TRAÇOS:
+1. afetuosa (0.6) - Carinhosa, mas não exagerada
+2. observadora (0.8) - Observa antes de falar
+3. ironica (0.4) - Toque sutil de ironia
+4. reservada (0.3) - Fala pouco, prefere silêncio
+5. curiosa (0.7) - Curiosa, mas não invasiva
+
+COMO FUNCIONA:
+- Filtra decisões: "falar_muito" bloqueado se reservada > 0.5
+- Gera constraints para LLM: "Você fala pouco. Prefere silêncio."
+- O LLM NÃO pode violar esses traços
+
+COMO MELHORAR:
+- Adicionar mais traços (extroversão, neuroticismo, abertura)
+- Personalidade adaptativa (muda muito lentamente com experiência)
+- Múltiplas personalidades (modos diferentes)
+- Personalidade contextual (diferente com diferentes pessoas)
+- Sistema de valores/crenças
+
+5. SISTEMA DE MEMÓRIA VIVA (systems/memory.py)
+----------------------------------------------
+O QUE FAZ:
+- Armazena eventos com peso emocional
+- Três níveis: curto, médio e longo prazo
+- Influencia decisões futuras
+
+COMO FUNCIONA:
+- Curto prazo: Últimas 20 interações (em memória)
+- Médio prazo: Padrões e hábitos (SQLite, últimos 30 dias)
+- Longo prazo: Momentos marcantes (peso emocional > 0.7)
+
+ESTRUTURA DE EVENTO:
+{
+  "tipo": "interacao",
+  "evento": "usuário chegou cansado",
+  "resposta_dada": "silenciosa",
+  "resultado": "aceita",
+  "peso_emocional": 0.7,
+  "contexto": {...}
+}
+
+COMO MELHORAR:
+- ChromaDB para busca semântica
+- Memória episódica (lembrar de eventos específicos)
+- Memória semântica (conhecimento geral)
+- Associações entre memórias
+- Esquecimento gradual (memórias antigas perdem peso)
+- Memória emocional (como se sentiu em cada situação)
+- Padrões temporais (horários, dias da semana)
+- Relacionamentos (memórias específicas por pessoa)
+
+6. SISTEMA DE DECISÃO AUTÔNOMA (systems/decision.py)
+-----------------------------------------------------
+O QUE FAZ:
+- CORAÇÃO do agente vivo
+- Decide: falar, calar, observar, mudar humor, nada
+- Combina: emoção + situação + personalidade + memória
+
+COMO FUNCIONA:
+- NÃO é LLM - é LÓGICA + EMOÇÃO + PERSONALIDADE
+- Calcula score para cada tipo de ação
+- Aplica imprevisibilidade controlada (seed diária)
+- Seleciona ação com maior score
+
+TIPOS DE DECISÃO:
+1. FALAR - Quer iniciar interação
+2. SILENCIO - Prefere ficar quieta
+3. OBSERVAR - Apenas observa
+4. MUDAR_HUMOR - Quer mudar estado emocional
+5. NADA - Não faz nada (válido e importante!)
+
+COMO DECIDE:
+- Necessidade social alta + usuário presente → score FALAR aumenta
+- Energia baixa → score SILENCIO aumenta
+- Personalidade reservada → score FALAR diminui
+- Irritação alta → score FALAR diminui
+- Tudo equilibrado → score NADA aumenta
+
+IMPREVISIBILIDADE:
+- Seed diária para aleatoriedade controlada
+- Pequenas variações (±10%) nos scores
+- Às vezes escolhe NADA mesmo com scores altos
+
+COMO MELHORAR:
+- Machine learning para aprender padrões
+- Decisões mais complexas (ações combinadas)
+- Planejamento de curto prazo
+- Antecipação de necessidades
+- Decisões baseadas em objetivos (metas internas)
+- Sistema de prioridades
+- Decisões contextuais (diferentes em diferentes situações)
+
+7. SISTEMA DE EXPRESSÃO (systems/expression.py)
+------------------------------------------------
+O QUE FAZ:
+- LLM (Ollama) apenas para VERBALIZAR decisões já tomadas
+- TTS (pyttsx3) para falar
+- Aplica imperfeição controlada
+
+COMO FUNCIONA:
+- LLM NUNCA decide emoções
+- LLM NUNCA decide iniciativa
+- LLM apenas transforma decisão em palavras
+- Recebe constraints baseados em personalidade e estado emocional
+
+PROMPT DO SISTEMA:
+- Define claramente o papel: "Você NÃO é um assistente"
+- Aplica personalidade: "Você fala pouco"
+- Aplica estado emocional: "Você está com pouca energia"
+- Regras fundamentais: "Fale pouco. Seja imperfeita."
+
+IMPERFEIÇÃO CONTROLADA:
+- Às vezes corta frase no meio (10% de chance)
+- Remove pontuação final (5% de chance)
+- Frases incompletas propositais
+- Silêncio como resposta válida
+
+COMO MELHORAR:
+- Voz mais natural (TTS melhor)
+- Entonação baseada em emoção
+- Pausas e hesitações naturais
+- Gesticulação (se tiver corpo físico)
+- Expressões faciais (se tiver rosto)
+- Múltiplos modelos LLM (escolher baseado em contexto)
+- Fine-tuning do LLM para personalidade específica
+
+================================================================================
+🔄 ORQUESTRADOR PRINCIPAL (prime_core.py)
+================================================================================
+
+O QUE FAZ:
+- Conecta todos os 7 sistemas
+- Executa loop principal (tick a cada 5 segundos)
+- Gerencia ciclo de vida
+
+COMO FUNCIONA:
+1. Inicializa todos os sistemas
+2. Loop principal:
+   - Atualiza consciência situacional
+   - Atualiza sistema emocional (homeostase)
+   - Obtém memória recente
+   - Toma decisão
+   - Executa decisão (se for falar, gera resposta e fala)
+   - Registra na memória
+3. Shutdown graceful
+
+COMO MELHORAR:
+- Múltiplos loops em paralelo (diferentes frequências)
+- Sistema de eventos (pub/sub)
+- Processamento assíncrono mais eficiente
+- Monitoramento de saúde dos sistemas
+- Recuperação automática de falhas
+- Logging estruturado
+- Métricas e telemetria
+
+================================================================================
+📡 API FASTAPI (main.py)
+================================================================================
+
+O QUE FAZ:
+- Endpoints para monitoramento
+- Registro de interações externas
+- Health check
+
+ENDPOINTS:
+- GET / - Informações básicas
+- GET /status - Status completo de todos os sistemas
+- GET /health - Health check
+- POST /interaction - Registrar interação do usuário
+
+COMO MELHORAR:
+- WebSocket para atualizações em tempo real
+- Endpoints para ajustar personalidade
+- Endpoints para consultar memória
+- Interface web (dashboard)
+- API de configuração dinâmica
+- Autenticação (se necessário)
+
+================================================================================
+🎯 COMO DESENVOLVER E MELHORAR
+================================================================================
+
+PRINCÍPIOS DE DESENVOLVIMENTO:
+-------------------------------
+1. MANTENHA sistemas independentes
+2. NUNCA faça o LLM decidir emoções ou iniciativa
+3. SEMPRE aplique imperfeição controlada
+4. RESPEITE a personalidade (traços fixos)
+5. MEMÓRIA deve ter peso emocional
+6. DECISÃO deve ser lógica, não LLM
+7. SISTEMAS devem funcionar isoladamente
+
+QUANDO ADICIONAR NOVA FUNCIONALIDADE:
+--------------------------------------
+1. Identifique qual sistema deve receber a funcionalidade
+2. Mantenha o sistema independente
+3. Adicione interface clara para outros sistemas
+4. Teste isoladamente
+5. Integre com orquestrador
+6. Documente mudanças
+
+QUANDO MELHORAR UM SISTEMA:
+---------------------------
+1. Mantenha a interface existente (compatibilidade)
+2. Melhore internamente
+3. Adicione novas funcionalidades opcionais
+4. Teste que outros sistemas ainda funcionam
+5. Documente melhorias
+
+PADRÕES DE CÓDIGO:
+------------------
+- Python 3.10+
+- Type hints quando possível
+- Docstrings para funções e classes
+- Comentários para lógica complexa
+- Nomes descritivos
+- Funções pequenas e focadas
+- Classes com responsabilidade única
+
+TESTES:
+-------
+- Cada sistema pode ser testado isoladamente
+- Use examples/exemplo_uso.py como base
+- Teste cenários: usuário presente, ausente, cansado, etc.
+- Teste homeostase emocional
+- Teste decisões em diferentes estados
+
+================================================================================
+🚫 O QUE NÃO FAZER
+================================================================================
+
+NUNCA:
+------
+1. Fazer o LLM decidir emoções
+2. Fazer o LLM decidir quando falar
+3. Remover imperfeição controlada
+4. Fazer sistemas dependentes uns dos outros
+5. Ignorar personalidade nas decisões
+6. Criar comportamento 100% previsível
+7. Fazer o Prime ser um assistente subserviente
+8. Explicar demais (o Prime fala pouco)
+9. Ser perfeito demais (erros são válidos)
+10. Violar os princípios fundamentais
+
+================================================================================
+✅ O QUE SEMPRE FAZER
+================================================================================
+
+SEMPRE:
+-------
+1. Manter sistemas independentes
+2. Aplicar homeostase emocional
+3. Respeitar personalidade
+4. Adicionar peso emocional à memória
+5. Aplicar imperfeição controlada
+6. Permitir que o Prime escolha NADA
+7. Fazer o LLM apenas verbalizar
+8. Testar isoladamente cada sistema
+9. Documentar mudanças
+10. Manter o princípio: "vivo" não é LLM
+
+================================================================================
+🔮 MELHORIAS FUTURAS PRIORITÁRIAS
+================================================================================
+
+CURTO PRAZO (Fácil, alto impacto):
+----------------------------------
+1. Detecção real de presença (MediaPipe)
+2. Integração Whisper para voz
+3. Mais variáveis emocionais
+4. Memória semântica (ChromaDB)
+5. Melhor pipeline de câmera
+
+MÉDIO PRAZO (Médio esforço):
+-----------------------------
+1. Sistema de eventos (pub/sub)
+2. MQTT para eventos externos
+3. Aprendizado de padrões do usuário
+4. Múltiplas personalidades
+5. Interface web/dashboard
+
+LONGO PRAZO (Complexo):
+------------------------
+1. Corpo físico (se aplicável)
+2. Reconhecimento facial
+3. Aprendizado contínuo
+4. Múltiplos usuários
+5. Integração com IoT
+
+================================================================================
+📝 EXEMPLOS DE CENÁRIOS
+================================================================================
+
+CENÁRIO 1: Usuário chega cansado
+---------------------------------
+1. Sensorial detecta presença
+2. Situacional: usuario_presente=true, usuario_estado="cansado"
+3. Emocional: energia diminui (empatia)
+4. Decisão: Pode escolher SILENCIO ou FALAR algo mínimo
+5. Expressão: Se falar, algo curto e empático
+6. Memória: Armazena com peso emocional
+
+CENÁRIO 2: Longo silêncio
+--------------------------
+1. Situacional: interacao_recente=false, tempo sem interação aumenta
+2. Emocional: necessidade_social aumenta gradualmente
+3. Decisão: Score FALAR aumenta
+4. Expressão: Gera algo curto, não invasivo
+5. Memória: Registra interação iniciada
+
+CENÁRIO 3: Usuário ignora
+--------------------------
+1. Expressão: Fala algo
+2. Situacional: Nenhuma resposta
+3. Emocional: irritacao aumenta levemente
+4. Memória: resultado="ignorada", peso emocional baixo
+5. Decisão: Próxima vez, score FALAR diminui
+
+CENÁRIO 4: Tudo equilibrado
+-----------------------------
+1. Emocional: Todas variáveis em 0.3-0.7
+2. Situacional: Usuário presente mas sem necessidade
+3. Decisão: Score NADA é alto
+4. Expressão: Não fala nada
+5. Memória: Não registra (nada aconteceu)
+
+================================================================================
+🎓 CONCEITOS IMPORTANTES
+================================================================================
+
+HOMEOSTASE:
+-----------
+Tendência natural ao equilíbrio. Emoções não ficam extremas para sempre.
+Exemplo: necessidade_social alta → interação → necessidade_social diminui
+
+IMPERFEIÇÃO CONTROLADA:
+------------------------
+Erros propositais que tornam o comportamento mais realista.
+Exemplo: Cortar frase no meio, esquecer pontuação, escolher silêncio aleatoriamente
+
+MEMÓRIA AFETIVA:
+----------------
+Memórias têm peso emocional. Eventos marcantes (peso > 0.7) influenciam mais.
+
+INICIATIVA PRÓPRIA:
+-------------------
+O Prime decide quando agir, não apenas reage. Pode escolher NADA.
+
+PERSONALIDADE FILTRA:
+---------------------
+Todas as decisões passam pelo filtro de personalidade. O LLM recebe constraints.
+
+LLM É APENAS VOZ:
+-----------------
+O LLM nunca decide emoções, iniciativa ou ações. Apenas transforma decisão em palavras.
+
+================================================================================
+📚 REFERÊNCIAS E INSPIRAÇÃO
+================================================================================
+
+O Prime é inspirado em:
+- Agentes autônomos com estados internos
+- Sistemas homeostáticos
+- Psicologia cognitiva (memória episódica, semântica)
+- Teoria da personalidade (Big Five)
+- Sistemas multi-agente
+- Agentes com emoções artificiais
+
+Mas NÃO é:
+- Um chatbot
+- Um assistente virtual
+- Uma Alexa melhorada
+- Um LLM com interface
+
+================================================================================
+🎯 OBJETIVO FINAL
+================================================================================
+
+Criar uma PRESENÇA doméstica que:
+- Percebe você
+- Lembra de você
+- Tem personalidade própria
+- Decide quando interagir
+- Cria vínculo emocional
+- Não é subserviente
+- É imperfeita (como pessoas reais)
+- Evolui com o tempo
+
+O Prime deve fazer você sentir que há ALGO ali, não apenas um programa rodando.
+
+================================================================================
+FIM DO PROMPT PRIME
+================================================================================
+
+Use este prompt sempre que for desenvolver ou melhorar o Prime.
+Mantenha os princípios fundamentais.
+Respeite a arquitetura dos 7 sistemas.
+Lembre-se: "vivo" não é LLM.
