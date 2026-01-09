@@ -1,0 +1,30 @@
+# Configurações do Prime
+# Copie este arquivo para .env e ajuste os valores
+
+ENVIRONMENT=development
+LOG_LEVEL=INFO
+
+# Ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=phi3
+
+# Database
+DATABASE_PATH=./data/prime.db
+CHROMA_PATH=./data/chroma
+
+# Sensorial
+CAMERA_INDEX=0
+ENABLE_CAMERA=true
+ENABLE_MICROPHONE=true
+
+# MQTT (opcional)
+MQTT_ENABLED=false
+MQTT_BROKER=localhost
+MQTT_PORT=1883
+
+# Personalidade (valores entre 0.0 e 1.0)
+PERSONALITY_AFETUOSA=0.6
+PERSONALITY_OBSERVADORA=0.8
+PERSONALITY_IRONICA=0.4
+PERSONALITY_RESERVADA=0.3
+PERSONALITY_CURIOSA=0.7
