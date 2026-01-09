@@ -1,5 +1,9 @@
 # 🧬 Prime - Agente Vivo
 
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-success.svg)](https://github.com/Usales/Prime)
+
 Um agente "vivo" que **NÃO é um LLM**. O LLM é apenas o aparelho fonador e linguístico.
 
 ## 🧠 Arquitetura
