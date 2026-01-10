@@ -39,6 +39,15 @@ class Settings:
     PERSONALITY_IRONICA = float(os.getenv("PERSONALITY_IRONICA", "0.4"))
     PERSONALITY_RESERVADA = float(os.getenv("PERSONALITY_RESERVADA", "0.3"))
     PERSONALITY_CURIOSA = float(os.getenv("PERSONALITY_CURIOSA", "0.7"))
+    
+    # Sistema de Decisão
+    TICK_INTERVAL = float(os.getenv("TICK_INTERVAL", "5.0"))
+    DECISION_THRESHOLD = float(os.getenv("DECISION_THRESHOLD", "0.5"))
+    
+    # Logs
+    LOG_FILE = os.getenv("LOG_FILE", "./logs/prime.log")
+    LOG_MAX_SIZE = int(os.getenv("LOG_MAX_SIZE", "10485760"))  # 10MB
+    LOG_BACKUP_COUNT = int(os.getenv("LOG_BACKUP_COUNT", "5"))
 
 
 settings = Settings()
