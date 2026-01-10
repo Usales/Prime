@@ -177,9 +177,19 @@ Três níveis de memória:
 
 Projeto pessoal - uso livre
 
+## 📚 Documentação
+
+- [INSTALL.md](INSTALL.md) - Guia completo de instalação
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Guia para contribuidores
+- [CHANGELOG.md](CHANGELOG.md) - Histórico de mudanças
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Detalhes da arquitetura
+- [STATUS.md](STATUS.md) - Status do projeto
+
 ## 🤝 Contribuindo
 
 Este é um projeto experimental. Sugestões são bem-vindas!
+
+Veja [CONTRIBUTING.md](CONTRIBUTING.md) para mais detalhes sobre como contribuir.
 
 ---
 
