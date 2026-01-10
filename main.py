@@ -67,7 +67,13 @@ async def root():
     return {
         "name": "Prime",
         "status": "alive",
-        "description": "Agente vivo com 7 sistemas independentes"
+        "description": "Agente vivo com 7 sistemas independentes",
+        "version": "0.1.0",
+        "endpoints": {
+            "/status": "Status completo de todos os sistemas",
+            "/health": "Health check rápido",
+            "/interaction": "Registra interação do usuário"
+        }
     }
 
 
