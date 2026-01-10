@@ -27,3 +27,12 @@ logs/*.log
 # OS
 .DS_Store
 Thumbs.db
+*.tmp
+*.temp
+
+# Modelos e cache
+*.model
+*.pkl
+*.pickle
+__pycache__/
+*.pyc
