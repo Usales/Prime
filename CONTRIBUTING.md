@@ -1,85 +1,116 @@
-# Contribuindo com o Prime
+# 🤝 Contribuindo para o Prime
 
-Obrigado por considerar contribuir com o Prime! 🎉
+Obrigado por considerar contribuir para o Prime! Este é um projeto experimental e toda ajuda é bem-vinda.
 
-## 🎯 Princípios do Projeto
+## Como Contribuir
 
-Antes de contribuir, entenda os princípios fundamentais:
+### 1. Reportar Bugs
 
-- **Um agente "vivo" NÃO é um LLM** - O LLM é apenas a voz
-- **Sistemas independentes** - Cada sistema funciona isoladamente
-- **Imperfeição controlada** - Erros propositais são válidos
-- **Memória afetiva** - Eventos têm peso emocional
-- **Homeostase** - Emoções buscam equilíbrio
+Se encontrar um bug, por favor:
 
-## 🚀 Como Contribuir
+1. Verifique se o bug já foi reportado nas [Issues](https://github.com/Usales/Prime/issues)
+2. Se não foi, crie uma nova issue com:
+   - Descrição clara do bug
+   - Passos para reproduzir
+   - Comportamento esperado vs. atual
+   - Informações do ambiente (OS, Python, etc.)
 
-### 1. Fork e Clone
+### 2. Sugerir Melhorias
+
+1. Verifique se a sugestão já existe nas [Issues](https://github.com/Usales/Prime/issues)
+2. Crie uma nova issue descrevendo:
+   - O problema que a melhoria resolveria
+   - Sua proposta de solução
+   - Exemplos de uso, se aplicável
+
+### 3. Contribuir com Código
+
+#### Fork e Clone
 
 ```bash
-git clone https://github.com/SeuUsuario/Prime.git
+# Faça fork do repositório no GitHub
+# Clone seu fork
+git clone https://github.com/SEU_USUARIO/Prime.git
 cd Prime
 ```
 
-### 2. Crie uma Branch
+#### Ambiente de Desenvolvimento
 
 ```bash
-git checkout -b feature/nova-funcionalidade
+# Crie ambiente virtual
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# ou
+.\venv\Scripts\activate  # Windows
+
+# Instale dependências
+pip install -r requirements.txt
 ```
 
-### 3. Faça suas Alterações
+#### Padrões de Código
 
-- Mantenha o código limpo e documentado
-- Siga a arquitetura de 7 sistemas independentes
-- Adicione testes se possível
-- Atualize documentação se necessário
+- Use Python 3.10+
+- Siga PEP 8
+- Adicione docstrings para funções e classes
+- Escreva comentários explicativos quando necessário
 
-### 4. Commit
+#### Commits
 
-Use mensagens descritivas:
+- Use mensagens de commit claras e descritivas
+- Formato: `tipo: descrição`
+- Tipos comuns: `feat`, `fix`, `docs`, `refactor`, `test`
 
-```bash
-git commit -m "feat: adiciona nova funcionalidade X"
+Exemplos:
+```
+feat: adicionar novo sistema de memória de longo prazo
+fix: corrigir erro na inicialização do sistema sensorial
+docs: atualizar README com novas instruções
 ```
 
-### 5. Push e Pull Request
+### 4. Pull Requests
 
-```bash
-git push origin feature/nova-funcionalidade
-```
+1. Crie uma branch para sua feature/fix:
+   ```bash
+   git checkout -b minha-feature
+   ```
 
-Depois abra um Pull Request no GitHub.
+2. Faça suas alterações
 
-## 📝 Padrões de Código
+3. Commit suas mudanças:
+   ```bash
+   git add .
+   git commit -m "feat: descrição da mudança"
+   ```
 
-- **Python 3.10+**
-- **Type hints** quando possível
-- **Docstrings** para funções e classes
-- **Comentários** para lógica complexa
+4. Push para seu fork:
+   ```bash
+   git push origin minha-feature
+   ```
 
-## 🧪 Testes
+5. Abra um Pull Request no GitHub
 
-Execute os exemplos:
+## Diretrizes
 
-```bash
-python examples/exemplo_uso.py
-```
+### Arquitetura
 
-## 📚 Estrutura de Commits
+- O Prime é composto por 7 sistemas independentes
+- Cada sistema deve ser autônomo
+- Comunicação entre sistemas via eventos ou estados compartilhados
 
-Use prefixos convencionais:
+### Princípios
 
-- `feat:` - Nova funcionalidade
-- `fix:` - Correção de bug
-- `docs:` - Documentação
-- `refactor:` - Refatoração
-- `test:` - Testes
-- `chore:` - Manutenção
+- **LLM nunca decide** - O LLM apenas verbaliza decisões
+- **Imperfeição controlada** - Erros propositais são válidos
+- **Memória afetiva** - Lembrar com peso emocional
 
-## ❓ Dúvidas?
+### Testes
 
-Abra uma Issue no GitHub!
+- Adicione testes quando possível
+- Teste casos de borda
+- Documente comportamento esperado
 
----
+## Perguntas?
 
-**Lembre-se**: O Prime é um agente "vivo", não um assistente. Mantenha isso em mente ao contribuir!
+Se tiver dúvidas, abra uma issue ou entre em contato.
+
+Obrigado por contribuir! 🎉
